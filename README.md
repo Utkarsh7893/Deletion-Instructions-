@@ -4,7 +4,7 @@ This repository documents the data deletion processes and guidelines for all dep
 # 📂 Data Deletion Procedures
 
 ## 📌 About
-This repository contains data deletion instructions for all deployed projects.
+This repository contains data deletion instructions for all my deployed projects.
 
 ## 🎯 Purpose
 - 🗑️ Provide clear steps to delete user data  
