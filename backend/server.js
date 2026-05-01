@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
-const mongoURI = process.env.MONGO_URI || "mongodb+srv://utkarshraj234:QTHcY1binTgzwgUD@utkcluster.mqcdpwj.mongodb.net/?appName=utkCluster";
+const mongoURI = process.env.MONGO_URI;
 mongoose.connect(mongoURI)
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('MongoDB connection error:', err));
@@ -39,10 +39,10 @@ app.post('/api/delete-request', async (req, res) => {
 
     await newRequest.save();
 
-    res.status(201).json({ 
-      success: true, 
+    res.status(201).json({
+      success: true,
       message: 'Request ticket has been raised successfully.',
-      ticketId 
+      ticketId
     });
   } catch (error) {
     console.error('Error creating deletion request:', error);
