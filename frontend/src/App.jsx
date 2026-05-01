@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './index.css';
 
+// The frontend must connect to your Express API URL (HTTP/HTTPS), NOT the Mongo database string.
+// Do not use process.env.MONGO_URI here.
+// This will automatically use your deployed Render URL from your .env file!
+// If you ever want to test locally again, just change your .env file to VITE_URI="http://localhost:5000"
+const API_BASE_URL = import.meta.env.VITE_URI || "http://localhost:5000";
+
 function App() {
   const [formData, setFormData] = useState({
     project: '',
@@ -15,11 +21,11 @@ function App() {
   // Three.js Background Effect
   useEffect(() => {
     if (!window.THREE) return;
-    
+
     const scene = new window.THREE.Scene();
     const camera = new window.THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new window.THREE.WebGLRenderer({ alpha: true, antialias: true });
-    
+
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.getElementById('canvas-container').appendChild(renderer.domElement);
 
@@ -28,7 +34,7 @@ function App() {
     const particlesCount = 700;
     const posArray = new Float32Array(particlesCount * 3);
 
-    for(let i = 0; i < particlesCount * 3; i++) {
+    for (let i = 0; i < particlesCount * 3; i++) {
       posArray[i] = (Math.random() - 0.5) * 10;
     }
 
@@ -73,16 +79,16 @@ function App() {
 
     const animate = () => {
       requestAnimationFrame(animate);
-      
+
       targetX = mouseX * 0.001;
       targetY = mouseY * 0.001;
-      
+
       particlesMesh.rotation.y += 0.001;
       particlesMesh.rotation.x += 0.0005;
-      
+
       particlesMesh.rotation.y += 0.05 * (targetX - particlesMesh.rotation.y);
       particlesMesh.rotation.x += 0.05 * (targetY - particlesMesh.rotation.x);
-      
+
       sphere.rotation.y -= 0.002;
       sphere.rotation.x -= 0.001;
 
@@ -124,7 +130,7 @@ function App() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5000/api/delete-request', {
+      const response = await fetch(`${API_BASE_URL}/api/delete-request`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -151,10 +157,10 @@ function App() {
   return (
     <>
       <div id="canvas-container"></div>
-      
+
       <div className="app-container">
         <div className="glass-card">
-          
+
           {!successData ? (
             <>
               <div className="header">
@@ -171,8 +177,8 @@ function App() {
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
                   <label htmlFor="project">Select Project</label>
-                  <select 
-                    name="project" 
+                  <select
+                    name="project"
                     id="project"
                     className="form-control"
                     value={formData.project}
@@ -188,9 +194,9 @@ function App() {
 
                 <div className="form-group">
                   <label htmlFor="email">Registered Email Address</label>
-                  <input 
-                    type="email" 
-                    name="email" 
+                  <input
+                    type="email"
+                    name="email"
                     id="email"
                     className="form-control"
                     placeholder="Enter the email associated with your account"
@@ -202,8 +208,8 @@ function App() {
 
                 <div className="form-group">
                   <label htmlFor="reason">Reason for Deletion / Feedback</label>
-                  <textarea 
-                    name="reason" 
+                  <textarea
+                    name="reason"
                     id="reason"
                     className="form-control"
                     placeholder="Please tell us why you are leaving and any issues you faced..."
@@ -214,9 +220,9 @@ function App() {
                 </div>
 
                 <div className="checkbox-group">
-                  <input 
-                    type="checkbox" 
-                    name="agreeTerms" 
+                  <input
+                    type="checkbox"
+                    name="agreeTerms"
                     id="agreeTerms"
                     checked={formData.agreeTerms}
                     onChange={handleChange}
@@ -234,7 +240,7 @@ function App() {
 
               <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--glass-border)', textAlign: 'center' }}>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: '1.5' }}>
-                  Alternatively, for manual deletion requests, you can email us directly at: <br/>
+                  Alternatively, for manual deletion requests, you can email us directly at: <br />
                   <a href="mailto:jaycob4498@gmail.com" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: '500' }}>jaycob4498@gmail.com</a>
                 </p>
               </div>
@@ -246,9 +252,9 @@ function App() {
                   <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
               </div>
-              
+
               <h2 style={{ marginBottom: '1rem', fontSize: '1.75rem', fontWeight: '700' }}>Request Submitted</h2>
-              
+
               <p className="instruction-text">
                 Thank you for being a valuable user. We have received your data deletion request.
               </p>
@@ -263,12 +269,12 @@ function App() {
               </p>
 
               <p className="instruction-text" style={{ fontSize: '0.85rem', marginTop: '2rem' }}>
-                If you have any further questions, please contact <br/>
+                If you have any further questions, please contact <br />
                 <span className="email-highlight">jaycob4498@gmail.com</span>
               </p>
 
-              <button 
-                className="btn-submit" 
+              <button
+                className="btn-submit"
                 style={{ marginTop: '1.5rem', background: 'transparent', border: '1px solid var(--glass-border)', color: 'var(--text-main)' }}
                 onClick={() => window.location.reload()}
               >
